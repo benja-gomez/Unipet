@@ -1,0 +1,16 @@
+FROM satantime/puppeteer-node:16.19 as build
+WORKDIR /app
+COPY package.json .
+RUN apt-get update \
+ && apt-get install -y chromium \
+    fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+    --no-install-recommends
+    
+RUN npm install
+
+FROM build as run
+
+copy tokens .
+COPY db.js .
+COPY index.js .
+CMD ["npm","start"]
