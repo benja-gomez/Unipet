@@ -1,5 +1,7 @@
 <script>
+	import { goto } from '$app/navigation';
 	import Stepper from '$lib/components/Stepper/Stepper.svelte';
+	import { errorToast, triggerToast } from '$lib/utils';
 	import { setContext } from 'svelte';
 
 	import { writable } from 'svelte/store';
@@ -10,18 +12,18 @@
 	import StepSend from './StepSend.svelte';
 	export let data;
 	setContext('regiones', data.regiones);
-	const active = writable(0);
+	const active = writable(3);
 
 	let files;
 	let datos = {
-		name: '',
+		name: null,
 		petType: 1,
 		petTypeDesc: '',
 		pubType: 1,
 		pubTypeDesc: '',
-		age: null,
+		age: 0,
 		diseases: null,
-		description: null,
+		description: '',
 		region: null,
 		comune: null,
 		address: null,
@@ -41,22 +43,29 @@
 				}
 			}
 
-			await fetch('/publication/new', {
+			let res = await fetch('/publication/new', {
 				method: 'POST',
 				headers: {
 					Accept: 'application/json'
 				},
 				body: formdata
 			});
-			
-		} catch (error) {
-			
-		}
+			res = await res.json();
+			if (res.success) {
+				triggerToast('Publicacion creada!');
+				goto('/');
+			}
+			if (!res.success) {
+				errorToast(res.message);
+			}
+		} catch (error) {}
 	}
 </script>
 
-<AvisoAzar />
-<div class=" flex  items-start justify-evenly gap-4 max-w-3xl mx-auto w-full h-full">
+<div class=" flex  flex-col  gap-4 max-w-3xl mx-auto w-full h-full">
+	<div class="  w-full">
+		<AvisoAzar />
+	</div>
 	<div class="  w-full bg-slate-100 shadow-xl rounded-xl p-4">
 		<div class=" gap-x-4 gap-y-2 w-full" method="POST" action="?/publicar">
 			<Stepper {active} length={4} on:complete={onComplete}>

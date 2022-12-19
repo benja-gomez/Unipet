@@ -16,35 +16,46 @@ export async function POST({ request, files, locals }) {
 					}
 				});
 			}
+			if (!files.length) {
+				valid = false;
+			}
 			return valid;
 		}
 		let publicationSchema = yup.object().shape({
-			name: yup.string().min(1).max(30).nullable(),
+			name: yup.string().min(1, 'El nombre debe tener minimo un caracter').max(30, 'El nombre debe tener maximo 30 caracteres').nullable(true),
 			petType: yup.number().oneOf([1, 2, 3]).required(),
-			petTypeDesc: yup.string().max(200).nullable(),
+			petTypeDesc: yup.string().max(200, 'Maximo 200 caracters').nullable(true),
 			pubType: yup.number().oneOf([1, 2, 3]).required(),
-			pubTypeDesc: yup.string().max(200).nullable(),
-			age: yup.string().min(0).max(100).nullable(),
-			diseases: yup.string().max(400).nullable(),
-			description: yup.string().min(10).max(500).required(),
-			comune: yup.number().min(1).max(500).required(),
-			address: yup.string().min(2).max(100).required(),
-			images: yup.array().required().test('is-correct-file', 'Imagen muy grande', checkIfFilesAreTooBig)
+			pubTypeDesc: yup.string().max(200, 'Tipo de publicacion maximo 200 caracteres').nullable(true),
+			age: yup.string().min(0, 'Edad minima 0').max(100, ' Edad maxima 100').nullable(true),
+			diseases: yup.string().max(400, 'Las enfermedades tienen un maximo de 400 caracters').nullable(true),
+			description: yup
+				.string()
+				.min(10, 'La descripcion debe ser de un minimo de 10 caracters')
+				.max(500, 'La descripcion debe ser de un maximo de 10 caracters')
+				.required('Debe ingresar una descripcion'),
+			comune: yup.number('Debe indicar la comuna').min(1).max(500).required('Debe indicar la comuna').typeError('Debe indicar la comuna'),
+			address: yup
+				.string()
+				.min(2, 'La direccion debe contener como minimo 2 caracteres')
+				.max(100, 'La direccion debe contener como maximo 100 caracteres')
+				.required(),
+			images: yup.array().required().test('is-correct-file', 'Debe incluir una imagen', checkIfFilesAreTooBig)
 		});
 
 		const body = await request.formData();
-		const name = body.get('name');
-		const petType = body.get('petType');
-		const petTypeDesc = body.get('petTypeDesc');
-		const pubType = body.get('pubType');
-		const pubTypeDesc = body.get('pubTypeDesc');
-		const age = body.get('age');
-		const diseases = body.get('diseases');
-		const description = body.get('description');
-		const comune = body.get('comune');
-		const address = body.get('address');
-		const images = body.getAll('images');
-		const dataValid = await publicationSchema
+		let name = body.get('name');
+		let petType = body.get('petType');
+		let petTypeDesc = body.get('petTypeDesc');
+		let pubType = body.get('pubType');
+		let pubTypeDesc = body.get('pubTypeDesc');
+		let age = body.get('age');
+		let diseases = body.get('diseases');
+		let description = body.get('description');
+		let comune = body.get('comune');
+		let address = body.get('address');
+		let images = body.getAll('images');
+		let dataValid = await publicationSchema
 			.validate({
 				name,
 				petType,
@@ -61,8 +72,11 @@ export async function POST({ request, files, locals }) {
 			.catch((err) => {
 				return { message: err.errors[0] };
 			});
-		
+
 		if (!dataValid.comune) return json({ success: false, message: dataValid.message });
+		if (age == 'null') age = 0;
+	
+
 		let {
 			rows: [publication]
 		} = await query(
@@ -91,7 +105,6 @@ export async function POST({ request, files, locals }) {
 
 		return json({ success: true });
 	} catch (error) {
-		console.log(error);
-	
+
 	}
 }
