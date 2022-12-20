@@ -17,9 +17,9 @@ Otros aspectos destacados:
 [Demo del proyecto](https://unipet.ostap.io)
 
 ## Requisitos
-- Servidor con IP Publica y minimo 1Gb RAM y 20GB de disco
+- Servidor 1Gb RAM y 20GB de disco
 - IP Publica 
-- Docker & Docker Compose instalado
+- Docker & Docker Compose
 
 La aplicacion para pruebas puede arrancar en cualquier sistema operativo que pueda ejecutar docker. 
 Esta parcialmente soportada la arquitectura ARM64
