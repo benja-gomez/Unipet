@@ -1,38 +1,45 @@
 # Aplicacion Unipet
 
-Guia rapida para arrancar con el servidor.
+Codigo fuente de UniPet, una aplicacion dedicada a ayudar a animales y duenos de mascotas en casos de extravio, encuentro o adopcion.
+Dentro de sus funciones principales se destacan:
 
-## Iniciando la aplicacion
+- Publicar avisos 
+- Chat interno
+- Administracion de publicaciones
+- Blog
+- Bot de notificaciones
 
-If you're seeing this, you've probably already done this step. Congrats!
+Otros aspectos destacados:
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- Arquitectura modular; los servicios se pueden separar en varios microservicios evitando ser monolitico.
+- Sin Vendor Lock In; las librerias y componentes utilizados son de codigo abierto y ampliamente intercambiables, no estas limitado a ocupar la misma base de datos o puedes cambiar Minio por AWS S3
 
-# create a new project in my-app
-npm create svelte@latest my-app
+
+
+
+## Requisitos
+
+Docker y Docker Compose instalado
+
+## Inicio
+
+Primero debe configurar las variables del entorno y dejarlos en la ruta raiz como ```.env``` puede referirse al ```.env.example``` para crear ese archivo,
+posteriormente debe arrancar la aplicacion con:
+
+```
+docker-compose up
+
+# O en versiones mas recientes
+docker compose up
 ```
 
-## Developing
+Con esto deberia dejar los siguentes servicios expuestos:
+| Servicio | URL | Descripcion |
+|---|---|---|
+|PostgreSQL|    http://localhost:5432| Base de datos|
+|Adminer|       http://localhost:8080| Panel web DB|
+|Minio Server|  http://localhost:9000| Object Storage (imagenes)|
+|Minio Panel|   http://localhost:9080| Panel Object Storage|
+|Aplicacion    |http://localhost:3000| Aplicacion principal |
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Esto permite configurar un reverse proxy con Nginx o Traefik de forma facil, la pagina principal esta disponible en la url ```http://localhost:3000```
