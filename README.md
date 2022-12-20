@@ -14,7 +14,7 @@ Otros aspectos destacados:
 - Arquitectura modular; los servicios se pueden separar en varios microservicios evitando ser monolitico.
 - Sin Vendor Lock In; las librerias y componentes utilizados son de codigo abierto y ampliamente intercambiables, no estas limitado a ocupar la misma base de datos o puedes cambiar Minio por AWS S3
 
-[Demo del proyecto](https://unipet.ostap.io)
+[Demo del proyecto](https://unipet.ostap.io) | [Wiki del proyecto](https://github.com/benja-gomez/Unipet/wiki)
 
 ## Requisitos
 - Servidor 1Gb RAM y 20GB de disco
