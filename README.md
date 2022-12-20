@@ -1,6 +1,6 @@
-# create-svelte
+# Aplicacion Unipet
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Guia rapida para arrancar con el servidor.
 
 ## Iniciando la aplicacion
 
